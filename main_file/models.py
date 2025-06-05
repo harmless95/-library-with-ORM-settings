@@ -3,7 +3,8 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, DateTime, Boolean, Float
 from sqlalchemy.orm import relationship, backref
 
-from main import Base, session
+from session_file import session
+from base_file import Base
 
 
 class Students(Base):
