@@ -7,7 +7,7 @@ from main_file.session_file import session
 def insert_data():
     list_authors = [
         Authors(name="Александр", surname="Пушкин"),
-        Authors(name="Фёдор", suname="Достоевский"),
+        Authors(name="Фёдор", surname="Достоевский"),
         Authors(name="Николай", surname="Гоголь"),
         Authors(name="Лев", surname="Толстой"),
         Authors(name="Михаил", surname="Лермонтов")
@@ -98,27 +98,32 @@ def insert_data():
                  surname="Захаров",
                  email="vitzah@yandex.ru",
                  phone="+79876543211",
-                 scholarship=True),
+                 scholarship=True,
+                 average_score=9.0),
         Students(name="Владимир",
                  surname="Петренко",
                  email="vape@yandex.ru",
                  phone="+79876543212",
-                 scholarship=True),
+                 scholarship=True,
+                 average_score=3.0),
         Students(name="Илья",
                  surname="Артонов",
                  email="ilar@yandex.ru",
                  phone="+79876543212",
-                 scholarship=True),
+                 scholarship=True,
+                 average_score=6.0),
         Students(name="Павел",
                  surname="Иванов",
                  email="pavi@yandex.ru",
-                 phone="89876543211",
-                 scholarship=True),
+                 phone="+79876543211",
+                 scholarship=True,
+                 average_score=8.5),
         Students(name="София",
                  surname="Деревянко",
                  email="sode@yandex.ru",
-                 phone="79876543214",
-                 scholarship=True)
+                 phone="+79876543214",
+                 scholarship=True,
+                 average_score=7.5)
     ]
     session.add_all(list_authors)
     session.add_all(list_students)

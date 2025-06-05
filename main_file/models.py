@@ -4,8 +4,8 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, DateTime, Boolean, Float
 from sqlalchemy.orm import relationship, backref, validates
 
-from session_file import session
-from base_file import Base
+from .session_file import session
+from .base_file import Base
 
 
 class Students(Base):
@@ -21,6 +21,9 @@ class Students(Base):
     average_score = Column(Float, nullable=False)
 
     receiving_student = relationship("ReceivingBooks", back_populates="student")
+
+    def to_json(self):
+        return {s.name: getattr(self, s.name) for s in self.__table__.columns}
 
     @validates("email")
     def validate_email(self, key, address):
@@ -46,11 +49,11 @@ class Books(Base):
     count = Column(Integer, default=1)
     release_date = Column(Date, nullable=False)
     id_author = Column(Integer, ForeignKey("authors.id"))
-    author = relationship("Author", backref=backref("books",
+    author = relationship("Authors", backref=backref("books",
                                                     cascade="all, "
                                                             "delete-orphan",
                                                     lazy="select"))
-    receiving_book = relationship("", back_populates="book")
+    receiving_book = relationship("ReceivingBooks", back_populates="book")
 
 class Authors(Base):
     """Обьект автора"""
@@ -72,7 +75,7 @@ class ReceivingBooks(Base):
 
     id = Column(Integer, primary_key=True)
     id_book = Column(Integer, ForeignKey("books.id"), nullable=False)
-    id_student = Column(Integer, ForeignKey("authors.id"), nullable=False)
+    id_student = Column(Integer, ForeignKey("students.id"), nullable=False)
     date_issue = Column(DateTime, default=datetime.now())
     date_return = Column(DateTime, nullable=True)
 

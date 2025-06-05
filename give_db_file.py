@@ -20,7 +20,7 @@ def give_my_book():
     # Ищем книги по требованию учеников
     book_to_vitaly = session.query(Books).join(Authors).filter(Authors.surname=="Достоевский").all()
     book_to_vladimir = session.query(Books).join(Authors).filter(Authors.name=="Александр").all()
-    book_to_ilya = session.query(Books).filter(Books.name=="Парус").one_or_none()
+    book_to_ilya = session.query(Books).filter(Books.name=="Парус").all()
     book_to_pavel = session.query(Books).filter((Books.release_date>=1840) & (Books.release_date<=1850)).all()
     book_to_sofia = session.query(Books).join(Authors).filter(Authors.name=="Лександр", Authors.surname=="Пушкин").all()
 
