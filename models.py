@@ -1,9 +1,12 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from datetime import datetime
+
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, DateTime
 from sqlalchemy.orm import relationship, backref
 
 from main import Base
 
 class Students(Base):
+    """Обьект студента"""
     __tablename__ = "students"
 
     id = Column(Integer, primary_key=True)
@@ -14,10 +17,13 @@ class Students(Base):
 
 
 class Books(Base):
+    """Обьект книги"""
     __tablename__ = "books"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
+    count = Column(Integer, default=1)
+    release_date = Column(Date, nullable=False)
     id_author = Column(Integer, ForeignKey("authors.id"))
     author = relationship("Author", backref=backref("books",
                                                     cascade="all, "
@@ -26,15 +32,50 @@ class Books(Base):
     receiving_book = relationship("", back_populates="book")
 
 class Authors(Base):
-    __table__ = "authors"
+    """Обьект автора"""
+    __tablename__ = "authors"
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
 
+    def __repr__(self):
+        return f"Имя: {self.name}, Фамилия: {self.surname}"
+
+    def to_json(self):
+        return {i.name: getattr(self, i.name) for i in self.__table__.columns}
+
 class ReceivingBooks(Base):
+    """Выдача книг"""
     __tablename__ = "receiving_books"
+
+    id = Column(Integer, primary_key=True)
+    id_book = Column(Integer, ForeignKey("books.id"), nullable=False)
+    id_student = Column(Integer, ForeignKey("authors.id"), nullable=False)
+    date_issue = Column(DateTime, default=datetime.now())
+    date_return = Column(DateTime, nullable=True)
 
     student = relationship("Students", back_populates="receiving_student")
     book = relationship("Books", back_populates="receiving_book")
+
+    def __repr__(self):
+        return (f"Книга: {self.id_book},"
+                f"Студент: {self.id_student},"
+                f"Дата выдачи: {self.date_issue},"
+                f"Дата возврата: {self.date_return},"
+                f"Кол-во дней, который держал/держит читатель: {self.count_date_book()}")
+
+    def count_date_book(self):
+        if self.date_return:
+            return (self.date_return - self.date_issue).days
+        else:
+            return (datetime.now() - self.date_issue).days
+
+    def to_json(self):
+        return {"id": self.id,
+                "id_book": self.id_book,
+                "id_student": self.id_student,
+                "date_issue": self.date_issue,
+                "date_return": self.date_return,
+                "count_date_book": self.count_date_book()}
 
