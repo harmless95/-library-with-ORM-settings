@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, DateTime, Boolean, Float
 from sqlalchemy.orm import relationship, backref
 
-from main import Base
+from main import Base, session
+
 
 class Students(Base):
     """Обьект студента"""
@@ -12,6 +13,10 @@ class Students(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     surname = Column(String(100), nullable=False)
+    email = Column(String(100), nullable=False)
+    phone = Column(String(100), nullable=False)
+    scholarship = Column(Boolean, nullable=False)
+    average_score = Column(Float, nullable=False)
 
     receiving_student = relationship("ReceivingBooks", back_populates="student")
 
@@ -78,4 +83,20 @@ class ReceivingBooks(Base):
                 "date_issue": self.date_issue,
                 "date_return": self.date_return,
                 "count_date_book": self.count_date_book()}
+
+    @classmethod
+    def get_list_students(cls):
+        students = session.query(Students).filter(Students.scholarship == True).all()
+        students_list = []
+        for student in students:
+            students_list.append(student.to_json())
+        return students_list
+
+    @classmethod
+    def get_list_students_score(cls, number):
+        students = session.query(Students).filter(Students.average_score > number).all()
+        students_list = []
+        for student in students:
+            students_list.append(student.to_json())
+        return students_list
 
