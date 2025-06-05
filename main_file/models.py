@@ -1,7 +1,8 @@
+import re
 from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, DateTime, Boolean, Float
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, validates
 
 from session_file import session
 from base_file import Base
@@ -20,6 +21,20 @@ class Students(Base):
     average_score = Column(Float, nullable=False)
 
     receiving_student = relationship("ReceivingBooks", back_populates="student")
+
+    @validates("email")
+    def validate_email(self, key, address):
+        pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not re.match(pattern, address):
+            raise ValueError(f"Некорректная электроная почта: {address}")
+        return address
+
+    @validates("phone")
+    def validate_phone(self, key, number):
+        pattern = r'^\+7\d{7,}$'
+        if not re.match(pattern, number):
+            raise ValueError(f"Некорректный номер телефона: {number}")
+        return number
 
 
 class Books(Base):
