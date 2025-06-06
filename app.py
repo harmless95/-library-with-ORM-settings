@@ -34,6 +34,11 @@ def get_all_books():
         list_books.append(book.to_json())
     return jsonify(all_books=list_books)
 
+@app.route("/book/<int:id>", methods=["GET"])
+def get_book_by_id(id:int):
+    book = session.query(Books).filter(Books.id==id).one()
+    return jsonify(book=book.to_json())
+
 @app.route("/authors", methods=["GET"])
 def get_all_authors():
     authors = session.query(Authors).all()
@@ -41,6 +46,11 @@ def get_all_authors():
     for author in authors:
         list_authors.append(author.to_json())
     return jsonify(all_authors=list_authors)
+
+@app.route("/author/<int:id>", methods=["GET"])
+def get_author_by_id(id:int):
+    author = session.query(Authors).filter(Authors.id==id).one()
+    return jsonify(author=author.to_json())
 
 if __name__ == "__main__":
     app.run(debug=True)
