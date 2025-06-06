@@ -55,6 +55,9 @@ class Books(Base):
                                                     lazy="select"))
     receiving_book = relationship("ReceivingBooks", back_populates="book")
 
+    def to_json(self):
+        return {book.name: getattr(self, book.name) for book in self.__table__.columns}
+
 class Authors(Base):
     """Обьект автора"""
     __tablename__ = "authors"
