@@ -21,6 +21,11 @@ def get_all_students():
         list_students.append(student.to_json())
     return jsonify(all_students=list_students), 200
 
+@app.route("/student/<int:id>", methods=["GET"])
+def get_student_by_id(id: int):
+    student = session.query(Students).filter(Students.id==id).one()
+    return jsonify(student=student.to_json())
+
 @app.route("/books", methods=["GET"])
 def get_all_books():
     books = session.query(Books).all()
