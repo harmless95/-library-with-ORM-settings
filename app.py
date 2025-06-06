@@ -13,6 +13,7 @@ app = Flask(__name__)
 def base_metadata():
     Base.metadata.create_all(engine)
 
+# Взаимодействие с Students
 @app.route("/students", methods=["GET"])
 def get_all_students():
     students = session.query(Students).all()
@@ -26,6 +27,13 @@ def get_student_by_id(id: int):
     student = session.query(Students).filter(Students.id==id).one()
     return jsonify(student=student.to_json())
 
+@app.route("/student/name/<string:name>", methods=["GET"])
+def get_student_by_name(name:str):
+    students = session.query(Students).filter(Students.name.like(f"%{name}%")).all()
+    list_name = [student.to_json() for student in students]
+    return jsonify(name=list_name)
+
+# Взаимодействие с Books
 @app.route("/books", methods=["GET"])
 def get_all_books():
     books = session.query(Books).all()
@@ -39,6 +47,13 @@ def get_book_by_id(id:int):
     book = session.query(Books).filter(Books.id==id).one()
     return jsonify(book=book.to_json())
 
+@app.route("/book/name/<string:name>", methods=["GET"])
+def get_book_by_name(name: str):
+    books = session.query(Books).filter(Books.name.like(f"%{name}%")).all()
+    list_book = [book.to_json() for book in books]
+    return jsonify(name=list_book)
+
+# Взаимодействие с Authors
 @app.route("/authors", methods=["GET"])
 def get_all_authors():
     authors = session.query(Authors).all()
@@ -51,6 +66,12 @@ def get_all_authors():
 def get_author_by_id(id:int):
     author = session.query(Authors).filter(Authors.id==id).one()
     return jsonify(author=author.to_json())
+
+@app.route("/author/name/<string:name>", methods=["GET"])
+def get_author_by_name(name: str):
+    authors = session.query(Authors).filter(Authors.name.like(f"%{name}%")).all()
+    list_author = [author.to_json() for author in authors]
+    return jsonify(name=list_author)
 
 if __name__ == "__main__":
     app.run(debug=True)
