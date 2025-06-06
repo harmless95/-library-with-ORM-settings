@@ -19,7 +19,7 @@ def get_all_students():
     list_students = []
     for student in students:
         list_students.append(student.to_json())
-    return jsonify(list_students=list_students), 200
+    return jsonify(all_students=list_students), 200
 
 @app.route("/books", methods=["GET"])
 def get_all_books():
@@ -27,8 +27,15 @@ def get_all_books():
     list_books = []
     for book in books:
         list_books.append(book.to_json())
-    return jsonify(list_books=list_books)
+    return jsonify(all_books=list_books)
 
+@app.route("/authors", methods=["GET"])
+def get_all_authors():
+    authors = session.query(Authors).all()
+    list_authors = []
+    for author in authors:
+        list_authors.append(author.to_json())
+    return jsonify(all_authors=list_authors)
 
 if __name__ == "__main__":
     app.run(debug=True)
