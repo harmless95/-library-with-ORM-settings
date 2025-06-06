@@ -4,6 +4,17 @@
     I. Запустить файл app.py
     II. В адресной строке вводим:
         * /students - Отобразит всех студентов
+            ** /student/<int:id> - Студента по id
+            ** /student/name/<string:name> - Студент по имени
+
+        * /authors - Отобразит всех авторов
+            ** /author/<int:id> - Автор по id
+            ** /author/name/<sting:name> - Автор по имени
+
+        * /books - Отобразит все книги
+            ** /book/<int:id> - Книга по id
+            ** /book/<string:name> - Книга по названию
+        
 ## Описание всех файлов
 1. **main_file**. Основной пакет с файлами для работоспособности кода
    * **base_file.py**. Файл с функцией от которого будут наследоваться все ваши модели таблиц базы данных.
@@ -42,3 +53,11 @@
             + give_my_book() - К добавленым пользователям добавляем книги по их запросу
     * base_metadata() - Загружаем и создаем базу данных
     * def get_all_students() - Находим всех студентов и отображаем
+    * get_student_by_id(id: int) - Находим студента по id
+    * get_student_by_name(name:str) - Находим студента по имени
+    * get_all_books() - Находит все книги
+    * get_book_by_id(id:int) - Находит книгу по id
+    * get_book_by_name(name: str) - Находит книгу по названию
+    * get_all_authors() - Находит все книги
+    * get_author_by_id(id:int) - Находит автора по id
+    * get_author_by_name(name: str) - Находит автора по имени
