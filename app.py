@@ -50,7 +50,17 @@ def get_book_by_id(id:int):
 @app.route("/book/name/<string:name>", methods=["GET"])
 def get_book_by_name(name: str):
     books = session.query(Books).filter(Books.name.like(f"%{name}%")).all()
-    list_book = [book.to_json() for book in books]
+    list_book = []
+    for book in books:
+        book_json = book.to_json()
+        # Предполагается, что у книги есть связанный автор
+        if hasattr(book, 'author') and book.author:
+            book_json['author_name'] = book.author.name
+            book_json["author_surname"] = book.author.surname
+        else:
+            book_json['author_name'] = None
+            book_json["author_surname"] = None
+        list_book.append(book_json)
     return jsonify(name=list_book)
 
 # Взаимодействие с Authors
