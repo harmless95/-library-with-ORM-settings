@@ -4,16 +4,19 @@
     I. Запустить файл app.py
     II. В адресной строке вводим:
         * /students - Отобразит всех студентов
-            ** /student/<int:id> - Студента по id
+            ** /student/<int:id> - Студент по id
             ** /student/name/<string:name> - Студент по имени
+            ** /student/<int:id> - Удаление студента 
 
         * /authors - Отобразит всех авторов
             ** /author/<int:id> - Автор по id
             ** /author/name/<sting:name> - Автор по имени
+            ** /author/<int:id> - Удаление автораи всех его книг по id
 
         * /books - Отобразит все книги
             ** /book/<int:id> - Книга по id
             ** /book/<string:name> - Книга по названию
+            ** /book/<int:id> - Удаление определенной книги по id
         
 ## Описание всех файлов
 1. **main_file**. Основной пакет с файлами для работоспособности кода
@@ -55,9 +58,12 @@
     * def get_all_students() - Находим всех студентов и отображаем
     * get_student_by_id(id: int) - Находим студента по id
     * get_student_by_name(name:str) - Находим студента по имени
+    * delete_student_by_id(id: int) - Удаление студента по id
     * get_all_books() - Находит все книги
     * get_book_by_id(id:int) - Находит книгу по id
     * get_book_by_name(name: str) - Находит книгу по названию
+    * delete_book_by_id(id: int) - Удаление книги по id
     * get_all_authors() - Находит все книги
     * get_author_by_id(id:int) - Находит автора по id
     * get_author_by_name(name: str) - Находит автора по имени
+    * delete_author_by_id(id: int) - Удаление автора по Id
