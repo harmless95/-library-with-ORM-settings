@@ -9,9 +9,9 @@ from give_db_file import give_my_book
 
 app = Flask(__name__)
 
-@app.before_request
-def base_metadata():
-    Base.metadata.create_all(engine)
+# @app.before_request
+# def base_metadata():
+#     Base.metadata.create_all(engine)
 
 # Взаимодействие с Students
 @app.route("/students", methods=["GET"])
@@ -43,6 +43,7 @@ def delete_student_by_id(id: int):
         session.commit()
         return jsonify({"message":"Ученик успешно удален"}), 200
     except Exception as ex:
+        session.rollback()
         return jsonify({"error":f"Произошла ошибка: {str(ex)}"}), 500
 
 # Взаимодействие с Books
@@ -122,8 +123,9 @@ def delete_author_by_id(id: int):
         return jsonify({"error": f"Произошла ошибка {ex}"})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    Base.metadata.create_all(engine)
     check_exists = session.query(Authors).all()
     if not check_exists:
         insert_data(),
         give_my_book()
+    app.run(debug=True)
