@@ -49,11 +49,8 @@ class Books(Base):
     count = Column(Integer, default=1)
     release_date = Column(Date, nullable=False)
     id_author = Column(Integer, ForeignKey("authors.id"))
-    author = relationship("Authors", backref=backref("books",
-                                                    cascade="all, "
-                                                            "delete-orphan",
-                                                    lazy="select"))
     receiving_book = relationship("ReceivingBooks", back_populates="book")
+    author = relationship("Authors", back_populates="books")
 
     def to_json(self):
         return {book.name: getattr(self, book.name) for book in self.__table__.columns}
@@ -65,6 +62,7 @@ class Authors(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
+    books = relationship("Books", back_populates="author", cascade="all, delete-orphan", lazy="select")
 
     def __repr__(self):
         return f"Имя: {self.name}, Фамилия: {self.surname}"

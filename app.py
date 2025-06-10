@@ -33,6 +33,18 @@ def get_student_by_name(name:str):
     list_name = [student.to_json() for student in students]
     return jsonify(name=list_name)
 
+@app.route("/student/<int:id>", methods=["DELETE"])
+def delete_student_by_id(id: int):
+    try:
+        student = session.query(Students).filter(Students.id==id).one_or_none()
+        if not student:
+            return jsonify({"message":"Такого ученика нет"}), 400
+        session.delete(student)
+        session.commit()
+        return jsonify({"message":"Ученик успешно удален"}), 200
+    except Exception as ex:
+        return jsonify({"error":f"Произошла ошибка: {str(ex)}"}), 500
+
 # Взаимодействие с Books
 @app.route("/books", methods=["GET"])
 def get_all_books():
@@ -63,6 +75,19 @@ def get_book_by_name(name: str):
         list_book.append(book_json)
     return jsonify(name=list_book)
 
+@app.route("/book/<int:id>", methods=["DELETE"])
+def delete_book_by_id(id: int):
+    try:
+        book = session.query(Books).filter(Books.id==id).one_or_none()
+        if not book:
+            return ({"message":"Такой книги нет"}), 404
+        session.delete(book)
+        session.commit()
+        return jsonify({"message":"Книга успешна удалена"}), 200
+    except Exception as ex:
+        session.rollback()
+        return jsonify({"error": f"Произошла ошибка: {str(ex)}"}), 500
+
 # Взаимодействие с Authors
 @app.route("/authors", methods=["GET"])
 def get_all_authors():
@@ -82,6 +107,19 @@ def get_author_by_name(name: str):
     authors = session.query(Authors).filter(Authors.name.like(f"%{name}%")).all()
     list_author = [author.to_json() for author in authors]
     return jsonify(name=list_author)
+
+@app.route("/author/<int:id>", methods=["DELETE"])
+def delete_author_by_id(id: int):
+    try:
+        author = session.query(Authors).filter(Authors.id==id).one_or_none()
+        if not author:
+            return ({"message":"Автор не найден"}), 404
+        session.delete(author)
+        session.commit()
+        return ({"message":"Автор успешно удален"}), 200
+    except Exception as ex:
+        session.rollback()
+        return jsonify({"error": f"Произошла ошибка {ex}"})
 
 if __name__ == "__main__":
     app.run(debug=True)
