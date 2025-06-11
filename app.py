@@ -139,6 +139,29 @@ def add_book():
     else:
         return jsonify({"message": "Метод не разрешен"}), 405
 
+@app.route("/update/book/<int:id>", methods=["PATCH"])
+def update_book(id: int):
+    if request.method == "PATCH":
+        try:
+            all_date = request.json
+            # Ищем книгу по id
+            book = session.query(Books).filter(Books.id==id).one_or_none()
+            if book is None:
+                return jsonify({"message": "Книга не найдена"})
+            # Если найдена меняем значения те поля, что есть в базе данных
+            for field, value in all_date.items():
+                if field == "release_date":
+                    value = datetime.strptime(value, "%Y, %m, %d").date()
+                if hasattr(book, field):
+                    setattr(book, field, value)
+            session.commit()
+            return jsonify({"message": "Данные обновлены"}), 200
+        except Exception as ex:
+            session.rollback()
+            return jsonify({"error": f"message : {str(ex)}"}), 500
+    else:
+        return jsonify({"message": "Ошибка метода"}), 405
+
 
 # Взаимодействие с Authors
 @app.route("/authors", methods=["GET"])
