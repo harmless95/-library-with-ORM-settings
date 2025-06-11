@@ -17,6 +17,8 @@
             ** /book/<int:id> - Книга по id
             ** /book/<string:name> - Книга по названию
             ** /book/<int:id> - Удаление определенной книги по id
+            ** /book/add - Добавление новой книги
+            ** /update/book/<int:id> - Изменение данных по id
         
 ## Описание всех файлов
 1. **main_file**. Основной пакет с файлами для работоспособности кода
@@ -63,6 +65,8 @@
     * get_book_by_id(id:int) - Находит книгу по id
     * get_book_by_name(name: str) - Находит книгу по названию
     * delete_book_by_id(id: int) - Удаление книги по id
+    * add_book() - Добавление книги
+    * update_book(id: int) - Обновляет данные по id
     * get_all_authors() - Находит все книги
     * get_author_by_id(id:int) - Находит автора по id
     * get_author_by_name(name: str) - Находит автора по имени
