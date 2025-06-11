@@ -82,6 +82,26 @@
     "version": "6.8.1"
   },
   "paths": {
+    "/students": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Students data",
+            "schema": {
+              "items": {
+                "$ref": "#definitions/Student"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "summary": "This is an endpoint for obtaining the students.",
+        "tags": [
+          "Student"
+        ]
+
+      }
+    }
 
   },
   "swagger": "2.0"
