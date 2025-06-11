@@ -1,4 +1,5 @@
 from datetime import datetime
+from math import trunc
 
 from flask import Flask, jsonify, request
 
@@ -18,24 +19,33 @@ app = Flask(__name__)
 # Взаимодействие с Students
 @app.route("/students", methods=["GET"])
 def get_all_students():
-    students = session.query(Students).all()
-    list_students = []
-    for student in students:
-        list_students.append(student.to_json())
-    return jsonify(all_students=list_students), 200
+    try:
+        students = session.query(Students).all()
+        list_students = []
+        for student in students:
+            list_students.append(student.to_json())
+        return jsonify(all_students=list_students), 200
+    except Exception as ex:
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 @app.route("/student/<int:id>", methods=["GET"])
 def get_student_by_id(id: int):
-    student = session.query(Students).filter(Students.id == id).one()
-    return jsonify(student=student.to_json())
+    try:
+        student = session.query(Students).filter(Students.id == id).one()
+        return jsonify(student=student.to_json()), 200
+    except Exception as ex:
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 @app.route("/student/name/<string:name>", methods=["GET"])
 def get_student_by_name(name: str):
-    students = session.query(Students).filter(Students.name.like(f"%{name}%")).all()
-    list_name = [student.to_json() for student in students]
-    return jsonify(name=list_name)
+    try:
+        students = session.query(Students).filter(Students.name.like(f"%{name}%")).all()
+        list_name = [student.to_json() for student in students]
+        return jsonify(name=list_name)
+    except Exception as ex:
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 @app.route("/student/<int:id>", methods=["DELETE"])
@@ -49,40 +59,49 @@ def delete_student_by_id(id: int):
         return jsonify({"message": "Ученик успешно удален"}), 200
     except Exception as ex:
         session.rollback()
-        return jsonify({"error": f"Произошла ошибка: {str(ex)}"}), 500
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 # Взаимодействие с Books
 @app.route("/books", methods=["GET"])
 def get_all_books():
-    books = session.query(Books).all()
-    list_books = []
-    for book in books:
-        list_books.append(book.to_json())
-    return jsonify(all_books=list_books)
+    try:
+        books = session.query(Books).all()
+        list_books = []
+        for book in books:
+            list_books.append(book.to_json())
+        return jsonify(all_books=list_books)
+    except Exception as ex:
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 @app.route("/book/<int:id>", methods=["GET"])
 def get_book_by_id(id: int):
-    book = session.query(Books).filter(Books.id == id).one()
-    return jsonify(book=book.to_json())
+    try:
+        book = session.query(Books).filter(Books.id == id).one()
+        return jsonify(book=book.to_json())
+    except Exception as ex:
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 @app.route("/book/name/<string:name>", methods=["GET"])
 def get_book_by_name(name: str):
-    books = session.query(Books).filter(Books.name.like(f"%{name}%")).all()
-    list_book = []
-    for book in books:
-        book_json = book.to_json()
-        # Предполагается, что у книги есть связанный автор
-        if hasattr(book, 'author') and book.author:
-            book_json['author_name'] = book.author.name
-            book_json["author_surname"] = book.author.surname
-        else:
-            book_json['author_name'] = None
-            book_json["author_surname"] = None
-        list_book.append(book_json)
-    return jsonify(name=list_book)
+    try:
+        books = session.query(Books).filter(Books.name.like(f"%{name}%")).all()
+        list_book = []
+        for book in books:
+            book_json = book.to_json()
+            # Предполагается, что у книги есть связанный автор
+            if hasattr(book, 'author') and book.author:
+                book_json['author_name'] = book.author.name
+                book_json["author_surname"] = book.author.surname
+            else:
+                book_json['author_name'] = None
+                book_json["author_surname"] = None
+            list_book.append(book_json)
+        return jsonify(name=list_book)
+    except Exception as ex:
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 @app.route("/book/<int:id>", methods=["DELETE"])
@@ -96,7 +115,7 @@ def delete_book_by_id(id: int):
         return jsonify({"message": "Книга успешна удалена"}), 200
     except Exception as ex:
         session.rollback()
-        return jsonify({"error": f"Произошла ошибка: {str(ex)}"}), 500
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/book/add", methods=["POST"])
@@ -135,7 +154,7 @@ def add_book():
             return jsonify({"message": "Книга успешно добавлена"}), 201
         except Exception as ex:
             session.rollback()
-            return jsonify({"error": f"Ошибка данных : {str(ex)}"}), 400
+            return jsonify({"error": f"message: {str(ex)}"}), 400
     else:
         return jsonify({"message": "Метод не разрешен"}), 405
 
@@ -166,24 +185,33 @@ def update_book(id: int):
 # Взаимодействие с Authors
 @app.route("/authors", methods=["GET"])
 def get_all_authors():
-    authors = session.query(Authors).all()
-    list_authors = []
-    for author in authors:
-        list_authors.append(author.to_json())
-    return jsonify(all_authors=list_authors)
+    try:
+        authors = session.query(Authors).all()
+        list_authors = []
+        for author in authors:
+            list_authors.append(author.to_json())
+        return jsonify(all_authors=list_authors)
+    except Exception as ex:
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 @app.route("/author/<int:id>", methods=["GET"])
 def get_author_by_id(id: int):
-    author = session.query(Authors).filter(Authors.id == id).one()
-    return jsonify(author=author.to_json())
+    try:
+        author = session.query(Authors).filter(Authors.id == id).one()
+        return jsonify(author=author.to_json())
+    except Exception as ex:
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 @app.route("/author/name/<string:name>", methods=["GET"])
 def get_author_by_name(name: str):
-    authors = session.query(Authors).filter(Authors.name.like(f"%{name}%")).all()
-    list_author = [author.to_json() for author in authors]
-    return jsonify(name=list_author)
+    try:
+        authors = session.query(Authors).filter(Authors.name.like(f"%{name}%")).all()
+        list_author = [author.to_json() for author in authors]
+        return jsonify(name=list_author)
+    except Exception as ex:
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 @app.route("/author/<int:id>", methods=["DELETE"])
@@ -197,7 +225,7 @@ def delete_author_by_id(id: int):
         return ({"message": "Автор успешно удален"}), 200
     except Exception as ex:
         session.rollback()
-        return jsonify({"error": f"Произошла ошибка {ex}"})
+        return jsonify({"error": f"message: {str(ex)}"})
 
 
 if __name__ == "__main__":
