@@ -1,0 +1,88 @@
+{
+  "definitions": {
+    "Author": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "id": {
+          "redOnly": true,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "surname"
+      ],
+      "type": "object"
+    },
+    "Book": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer"
+        },
+        "release_date": {
+          "type": "string"
+        },
+        "id": {
+          "redOnly": true,
+          "type": "integer"
+        }
+
+      },
+      "required": [
+        "name",
+        "release_date"
+
+      ]
+    },
+    "Student": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "scholarship": {
+          "type": "boolean"
+        },
+        "average_score": {
+          "type": "float"
+        },
+        "id": {
+          "redOnly": true,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "surname",
+        "email",
+        "phone",
+        "scholarship",
+        "average_score"
+      ]
+    }
+  },
+  "info": {
+    "title": "School library",
+    "version": "6.8.1"
+  },
+  "paths": {
+
+  },
+  "swagger": "2.0"
+}
