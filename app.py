@@ -26,7 +26,7 @@ def get_all_students():
             list_students.append(student.to_json())
         return jsonify(all_students=list_students), 200
     except Exception as ex:
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/student/<int:id>", methods=["GET"])
@@ -35,7 +35,7 @@ def get_student_by_id(id: int):
         student = session.query(Students).filter(Students.id == id).one()
         return jsonify(student=student.to_json()), 200
     except Exception as ex:
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/student/name/<string:name>", methods=["GET"])
@@ -45,7 +45,7 @@ def get_student_by_name(name: str):
         list_name = [student.to_json() for student in students]
         return jsonify(name=list_name)
     except Exception as ex:
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/student/<int:id>", methods=["DELETE"])
@@ -70,18 +70,18 @@ def get_all_books():
         list_books = []
         for book in books:
             list_books.append(book.to_json())
-        return jsonify(all_books=list_books)
+        return jsonify(all_books=list_books), 200
     except Exception as ex:
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/book/<int:id>", methods=["GET"])
 def get_book_by_id(id: int):
     try:
         book = session.query(Books).filter(Books.id == id).one()
-        return jsonify(book=book.to_json())
+        return jsonify(book=book.to_json()), 200
     except Exception as ex:
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/book/name/<string:name>", methods=["GET"])
@@ -99,9 +99,9 @@ def get_book_by_name(name: str):
                 book_json['author_name'] = None
                 book_json["author_surname"] = None
             list_book.append(book_json)
-        return jsonify(name=list_book)
+        return jsonify(name=list_book), 200
     except Exception as ex:
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/book/<int:id>", methods=["DELETE"])
@@ -190,18 +190,18 @@ def get_all_authors():
         list_authors = []
         for author in authors:
             list_authors.append(author.to_json())
-        return jsonify(all_authors=list_authors)
+        return jsonify(all_authors=list_authors), 200
     except Exception as ex:
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/author/<int:id>", methods=["GET"])
 def get_author_by_id(id: int):
     try:
         author = session.query(Authors).filter(Authors.id == id).one()
-        return jsonify(author=author.to_json())
+        return jsonify(author=author.to_json()), 200
     except Exception as ex:
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/author/name/<string:name>", methods=["GET"])
@@ -209,9 +209,9 @@ def get_author_by_name(name: str):
     try:
         authors = session.query(Authors).filter(Authors.name.like(f"%{name}%")).all()
         list_author = [author.to_json() for author in authors]
-        return jsonify(name=list_author)
+        return jsonify(name=list_author), 200
     except Exception as ex:
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 @app.route("/author/<int:id>", methods=["DELETE"])
@@ -225,7 +225,7 @@ def delete_author_by_id(id: int):
         return ({"message": "Автор успешно удален"}), 200
     except Exception as ex:
         session.rollback()
-        return jsonify({"error": f"message: {str(ex)}"})
+        return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
 if __name__ == "__main__":
