@@ -1,4 +1,6 @@
-from flask import Flask, jsonify
+from datetime import datetime
+
+from flask import Flask, jsonify, request
 
 from main_file.base_file import Base
 from main_file.session_file import engine, session
@@ -6,8 +8,8 @@ from main_file.models import Students, Authors, Books
 from insert_db_file import insert_data
 from give_db_file import give_my_book
 
-
 app = Flask(__name__)
+
 
 # @app.before_request
 # def base_metadata():
@@ -22,29 +24,33 @@ def get_all_students():
         list_students.append(student.to_json())
     return jsonify(all_students=list_students), 200
 
+
 @app.route("/student/<int:id>", methods=["GET"])
 def get_student_by_id(id: int):
-    student = session.query(Students).filter(Students.id==id).one()
+    student = session.query(Students).filter(Students.id == id).one()
     return jsonify(student=student.to_json())
 
+
 @app.route("/student/name/<string:name>", methods=["GET"])
-def get_student_by_name(name:str):
+def get_student_by_name(name: str):
     students = session.query(Students).filter(Students.name.like(f"%{name}%")).all()
     list_name = [student.to_json() for student in students]
     return jsonify(name=list_name)
 
+
 @app.route("/student/<int:id>", methods=["DELETE"])
 def delete_student_by_id(id: int):
     try:
-        student = session.query(Students).filter(Students.id==id).one_or_none()
+        student = session.query(Students).filter(Students.id == id).one_or_none()
         if not student:
-            return jsonify({"message":"Такого ученика нет"}), 400
+            return jsonify({"message": "Такого ученика нет"}), 400
         session.delete(student)
         session.commit()
-        return jsonify({"message":"Ученик успешно удален"}), 200
+        return jsonify({"message": "Ученик успешно удален"}), 200
     except Exception as ex:
         session.rollback()
-        return jsonify({"error":f"Произошла ошибка: {str(ex)}"}), 500
+        return jsonify({"error": f"Произошла ошибка: {str(ex)}"}), 500
+
 
 # Взаимодействие с Books
 @app.route("/books", methods=["GET"])
@@ -55,10 +61,12 @@ def get_all_books():
         list_books.append(book.to_json())
     return jsonify(all_books=list_books)
 
+
 @app.route("/book/<int:id>", methods=["GET"])
-def get_book_by_id(id:int):
-    book = session.query(Books).filter(Books.id==id).one()
+def get_book_by_id(id: int):
+    book = session.query(Books).filter(Books.id == id).one()
     return jsonify(book=book.to_json())
+
 
 @app.route("/book/name/<string:name>", methods=["GET"])
 def get_book_by_name(name: str):
@@ -76,18 +84,51 @@ def get_book_by_name(name: str):
         list_book.append(book_json)
     return jsonify(name=list_book)
 
+
 @app.route("/book/<int:id>", methods=["DELETE"])
 def delete_book_by_id(id: int):
     try:
-        book = session.query(Books).filter(Books.id==id).one_or_none()
+        book = session.query(Books).filter(Books.id == id).one_or_none()
         if not book:
-            return ({"message":"Такой книги нет"}), 404
+            return ({"message": "Такой книги нет"}), 404
         session.delete(book)
         session.commit()
-        return jsonify({"message":"Книга успешна удалена"}), 200
+        return jsonify({"message": "Книга успешна удалена"}), 200
     except Exception as ex:
         session.rollback()
         return jsonify({"error": f"Произошла ошибка: {str(ex)}"}), 500
+
+
+@app.route("/book/add", methods=["POST"])
+def add_book():
+    if request.method == "POST":
+        try:
+            all_data = request.json
+            author = all_data["author"].split()
+            author_name = author[0]
+            author_surname = author[1]
+            release_book = datetime.strptime(all_data["release_date"], "%Y, %m, %d").date()
+            # Проверяем есть ли такой автор в базе данных
+            author_new = session.query(Authors).filter(
+                Authors.name == author_name,
+                Authors.surname == author_surname
+            ).one_or_none()
+            # Добавляем автора если нет
+            if author_new is None:
+                author_new = Authors(name=author_name, surname=author_surname)
+                session.add(author_new)
+                session.flush()
+            # Добавляем книгу
+            book = Books(name=all_data["name"], count=all_data["count"], release_date=release_book, id_author=author_new.id)
+            session.add(book)
+            session.commit()
+            return jsonify({"message": "Книга успешно добавлена"}), 201
+        except Exception as ex:
+            session.rollback()
+            return jsonify({"error": f"Ошибка данных : {str(ex)}"}), 400
+    else:
+        return jsonify({"message": "Метод не разрешен"}), 405
+
 
 # Взаимодействие с Authors
 @app.route("/authors", methods=["GET"])
@@ -98,10 +139,12 @@ def get_all_authors():
         list_authors.append(author.to_json())
     return jsonify(all_authors=list_authors)
 
+
 @app.route("/author/<int:id>", methods=["GET"])
-def get_author_by_id(id:int):
-    author = session.query(Authors).filter(Authors.id==id).one()
+def get_author_by_id(id: int):
+    author = session.query(Authors).filter(Authors.id == id).one()
     return jsonify(author=author.to_json())
+
 
 @app.route("/author/name/<string:name>", methods=["GET"])
 def get_author_by_name(name: str):
@@ -109,18 +152,20 @@ def get_author_by_name(name: str):
     list_author = [author.to_json() for author in authors]
     return jsonify(name=list_author)
 
+
 @app.route("/author/<int:id>", methods=["DELETE"])
 def delete_author_by_id(id: int):
     try:
-        author = session.query(Authors).filter(Authors.id==id).one_or_none()
+        author = session.query(Authors).filter(Authors.id == id).one_or_none()
         if not author:
-            return ({"message":"Автор не найден"}), 404
+            return ({"message": "Автор не найден"}), 404
         session.delete(author)
         session.commit()
-        return ({"message":"Автор успешно удален"}), 200
+        return ({"message": "Автор успешно удален"}), 200
     except Exception as ex:
         session.rollback()
         return jsonify({"error": f"Произошла ошибка {ex}"})
+
 
 if __name__ == "__main__":
     Base.metadata.create_all(engine)
