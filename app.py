@@ -1,7 +1,10 @@
 from datetime import datetime
 from math import trunc
 
+from flasgger import APISpec, Swagger
 from flask import Flask, jsonify, request
+from flask_restful import Api
+from werkzeug.serving import WSGIRequestHandler
 
 from main_file.base_file import Base
 from main_file.session_file import engine, session
@@ -10,7 +13,15 @@ from insert_db_file import insert_data
 from give_db_file import give_my_book
 
 app = Flask(__name__)
+api = Api(app)
 
+spec = APISpec(
+    title="School library",
+    version="6.8.1",
+    openapi_version="2.0"
+)
+template = spec.to_flasgger(app)
+swagger = Swagger(app, template_file="docs_restapi/swagger_library.json")
 
 # @app.before_request
 # def base_metadata():
@@ -234,4 +245,5 @@ if __name__ == "__main__":
     if not check_exists:
         insert_data(),
         give_my_book()
+    WSGIRequestHandler.protocol_version = "HTTP/1.1"
     app.run(debug=True)
