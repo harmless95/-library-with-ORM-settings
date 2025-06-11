@@ -118,9 +118,19 @@ def add_book():
                 author_new = Authors(name=author_name, surname=author_surname)
                 session.add(author_new)
                 session.flush()
-            # Добавляем книгу
-            book = Books(name=all_data["name"], count=all_data["count"], release_date=release_book, id_author=author_new.id)
-            session.add(book)
+            # Проверяем есть ли такая книга в наличие
+            book_new = session.query(Books).filter(
+                Books.name==all_data["name"],
+            Books.release_date==release_book,
+            Books.id_author==author_new.id
+            ).one_or_none()
+            # Добавляем если не найдено
+            if book_new is None:
+                book = Books(name=all_data["name"], count=all_data["count"], release_date=release_book, id_author=author_new.id)
+                session.add(book)
+            else:
+                # Если такая есть увеличиваем кол-во
+                book_new.count += all_data["count"]
             session.commit()
             return jsonify({"message": "Книга успешно добавлена"}), 201
         except Exception as ex:
