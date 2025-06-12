@@ -129,7 +129,7 @@ def delete_book_by_id(id: int):
         return jsonify({"error": f"message: {str(ex)}"}), 500
 
 
-@app.route("/book/add", methods=["POST"])
+@app.route("/book", methods=["POST"])
 def add_book():
     if request.method == "POST":
         try:
@@ -165,11 +165,11 @@ def add_book():
             return jsonify({"message": "Книга успешно добавлена"}), 201
         except Exception as ex:
             session.rollback()
-            return jsonify({"error": f"message: {str(ex)}"}), 400
+            return jsonify({"error": f"message: {str(ex)}"}), 500
     else:
         return jsonify({"message": "Метод не разрешен"}), 405
 
-@app.route("/update/book/<int:id>", methods=["PATCH"])
+@app.route("/book/<int:id>", methods=["PATCH"])
 def update_book(id: int):
     if request.method == "PATCH":
         try:
