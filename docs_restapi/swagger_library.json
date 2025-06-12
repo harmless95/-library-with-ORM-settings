@@ -355,6 +355,36 @@
           "Book"
         ]
       }
+    },
+    "/book/name/{name}": {
+      "get": {
+        "parameters": [
+        {
+          "description": "Search book by title",
+          "in": "path",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+        "responses": {
+          "200": {
+            "description": "Book by name",
+            "schema": {
+              "items": {
+                "$ref": "#definitions/Book"
+              },
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "Book by title",
+        "tags": [
+          "Book"
+        ]
+      }
     }
   },
   "swagger": "2.0"
