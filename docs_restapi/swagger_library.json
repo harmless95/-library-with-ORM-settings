@@ -145,7 +145,7 @@
             "description": "There is no such student"
           },
           "500": {
-            "description": "Error"
+            "description": "Error, the student took the book "
           }
         },
         "summary": "This is an endpoint for delete the student by id",
@@ -249,7 +249,7 @@
             "description": "The book has been deleted"
           },
           "500": {
-            "description": "Error"
+            "description": "Error, we took the book to read"
           }
         },
         "summary": "This is an endpoint for delete the book by id",
@@ -454,7 +454,7 @@
             "description": "Author not found"
           },
           "500": {
-            "description": "Error"
+            "description": "Error, the author's book was taken to read"
           }
         },
         "summary": "Remove author",
