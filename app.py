@@ -54,7 +54,7 @@ def get_student_by_name(name: str):
     try:
         students = session.query(Students).filter(Students.name.like(f"%{name}%")).all()
         list_name = [student.to_json() for student in students]
-        return jsonify(name=list_name)
+        return jsonify(name=list_name), 200
     except Exception as ex:
         return jsonify({"error": f"message: {str(ex)}"}), 500
 

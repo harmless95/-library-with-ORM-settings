@@ -101,6 +101,91 @@
         ]
 
       }
+    },
+    "/student/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "description": "display student by id",
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Student by id",
+            "schema": {
+              "items": {
+                "$ref": "#definitions/Student"
+              },
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "This is an endpoint for obtaining the students.",
+        "tags": [
+          "Student"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "description": "ID to delete student",
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The student has been deleted"
+          },
+          "400": {
+            "description": "There is no such student"
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "This is an endpoint for delete the student by id",
+        "tags": [
+          "Student"
+        ]
+      }
+    },
+    "/student/name/{name}": {
+      "get": {
+        "parameters": [
+          {
+            "description": "display student by name",
+            "in": "path",
+            "name": "name",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Student by name",
+            "schema": {
+              "items": {
+                "$ref": "#definitions/Student"
+              },
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "This endpoint retrieves students by their name",
+        "tags": [
+          "Student"
+        ]
+      }
     }
 
   },
