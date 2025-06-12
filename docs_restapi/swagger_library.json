@@ -385,6 +385,113 @@
           "Book"
         ]
       }
+    },
+    "/authors": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Display authors",
+            "schema": {
+              "items": {
+                "$ref": "#definitions/Author"
+              },
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "Show all authors",
+        "tags": [
+          "Author"
+        ]
+      }
+    },
+    "/author/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Author by id",
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authors data by id",
+            "schema": {
+              "items": {
+                "$ref": "#definitions/Author"
+              },
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "Find author by id",
+        "tags": [
+          "Author"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "description": "Delete author by id",
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Author removed successfully"
+          },
+          "404": {
+            "description": "Author not found"
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "Remove author",
+        "tags": [
+          "Author"
+        ]
+      }
+    },
+    "/author/name/{name}": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Display author by name",
+            "in": "path",
+            "name": "name",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Author data by name",
+            "schema": {
+              "items": {
+                "$ref": "#definitions/Author"
+              },
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "Author by name",
+        "tags": [
+          "Author"
+        ]
+      }
     }
   },
   "swagger": "2.0"
