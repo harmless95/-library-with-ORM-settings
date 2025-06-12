@@ -34,12 +34,10 @@
           "redOnly": true,
           "type": "integer"
         }
-
       },
       "required": [
         "name",
         "release_date"
-
       ]
     },
     "Student": {
@@ -99,7 +97,6 @@
         "tags": [
           "Student"
         ]
-
       }
     },
     "/student/{id}": {
@@ -186,8 +183,179 @@
           "Student"
         ]
       }
+    },
+    "/books": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Books data",
+            "schema": {
+              "items": {
+                "$ref": "#definitions/Book"
+              },
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "This is an endpoint for obtaining the books.",
+        "tags": [
+          "Book"
+        ]
+      }
+    },
+    "/book/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "description": "display book by id",
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book data by id",
+            "schema": {
+              "items": {
+                "$ref": "#definitions/Book"
+              },
+              "type": "array"
+            }
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "This is an endpoint for obtaining the book by id.",
+        "tags": [
+          "Book"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "description": "ID to delete book",
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The book has been deleted"
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "This is an endpoint for delete the book by id",
+        "tags": [
+          "Book"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "description": "ID to patch book",
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "description": "Data that needs to be update",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name book"
+                },
+                "count": {
+                  "type": "integer",
+                  "description": "Count book"
+                },
+                "release_date": {
+                  "type": "date",
+                  "description": "Book release date in YYYY-MM-DD format"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The update was successful"
+          },
+          "404": {
+            "description": "Error methods"
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "Update book data",
+        "tags": [
+          "Book"
+        ]
+      }
+    },
+    "/book": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Adding a new book",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name book"
+                },
+                "count": {
+                  "type": "integer",
+                  "description": "Count book"
+                },
+                "release_date": {
+                  "type": "date",
+                  "description": "Book release date in YYYY-MM-DD format"
+                },
+                "author": {
+                  "type": "string",
+                  "description": "The author's first and last name separated by a space"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "book added successfully"
+          },
+          "405": {
+            "description": "Error methods"
+          },
+          "500": {
+            "description": "Error"
+          }
+        },
+        "summary": "Adding a book",
+        "tags": [
+          "Book"
+        ]
+      }
     }
-
   },
   "swagger": "2.0"
 }
